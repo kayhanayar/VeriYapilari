@@ -54,4 +54,6 @@ int main()
     //diğer işaretçiler herhangi bir yer göstermiyor. onları serbest bırakmayacağız
     //bütün diziyi serbest bıraktık.
     delete [] dizi;
+
+    int* p =new int[]{1,2,3,4};
 }

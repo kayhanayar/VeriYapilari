@@ -23,11 +23,11 @@ int* diziOlusturRastgeleAta(int boyut)
 //ekrana çıkarmaktadır.
 void diziAdresleriIleYazdir(int* dizi,int boyut)
 {
-    cout<<setw(10)<<"adres"<<setw(10)<<"deger"<<endl;
+    cout<<"adres     "<<setw(10)<<" -> deger"<<endl;
     for(int i = 0;i<boyut;i++)
     {
        
-        cout<<setw(10)<<dizi+i<<setw(10)<<*(dizi+i)<<endl;
+        cout<<dizi+i<<"-> "<<*(dizi+i)<<endl;
     }   
 }
 
