@@ -7,6 +7,7 @@ public:
     BagliListe();
     ~BagliListe();
     void ekle(int veri);
+    
     void yazdir();
     void cikar();
 private:
