@@ -48,6 +48,8 @@ public:
         if(sira==0&&ilk==0)
         {
             ilk = new Dugum<Tur>(veri);
+            ilk->sonraki =ilk;
+            ilk->onceki = ilk;
         }
         else
         {
@@ -62,11 +64,16 @@ public:
             aktifDugum->onceki = yeni;
             yeni->sonraki = aktifDugum;
             yeni->onceki = onceki;
-
+            
             if(onceki)
                 onceki->sonraki = yeni;
             else
+            {
                 ilk = yeni;
+                ilk->onceki=yeni;
+                ilk->sonraki=yeni;
+            }
+                
         }
 
         dugumSayisi++;
@@ -91,6 +98,7 @@ public:
             gec->sonraki=yeni;
             yeni->onceki=gec;
             yeni->sonraki = ilk;
+            ilk->onceki=yeni;
         }
         dugumSayisi++;
     }
@@ -124,6 +132,7 @@ public:
             Dugum<Tur>* gecici = sondanBirOncekiGetir();
             delete gecici->sonraki;
             gecici->sonraki = ilk;
+            ilk->onceki = gecici;
         }
         dugumSayisi--;
     }
@@ -143,6 +152,8 @@ public:
 
         if(sonraki!=ilk)
             sonraki->onceki = onceki;
+        else
+            ilk->onceki= onceki;
 
         if(onceki)
             onceki->sonraki = sonraki;
@@ -150,7 +161,8 @@ public:
         {
             Dugum<Tur>* son = dugumGetir(dugumSayisi-1);
             son->sonraki = ilk->sonraki;
-            ilk = sonraki;            
+            ilk = sonraki;  
+            ilk->onceki = son;          
         }
             
         delete silinecek;
