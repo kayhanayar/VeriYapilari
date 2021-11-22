@@ -24,8 +24,7 @@ public:
 int main()
 {
     BagliListe<dortgen>* liste = new BagliListe<dortgen>();
-    dortgen d1;
-    dortgen d2(d1);
+
     
     liste->cikar();
 }

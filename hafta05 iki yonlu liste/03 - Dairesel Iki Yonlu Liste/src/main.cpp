@@ -7,17 +7,14 @@ using namespace std;
 
 int main()
 {
-    BagliListe<int>* liste = new BagliListe<int>();
+	BagliListe<int> liste;
 
-    liste->ekle(11);
-    liste->ekle(22);
-    liste->ekle(33);
-    liste->ekle(44);
-    liste->ekle(55);
+	for (int i = 0; i < 5; i++)
+		liste.ekle((i + 1) * 11);
 
-    cout<<*liste;
-    liste->cikar(2);
-    cout<<*liste;
+	cout << liste;
+	liste.ekle(4, 88);
+	cout << liste;
    
     
 }

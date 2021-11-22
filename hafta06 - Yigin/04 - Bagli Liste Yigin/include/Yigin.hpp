@@ -16,8 +16,6 @@ public:
     
     friend ostream& operator<<(ostream& os,Yigin& yigin);
     int getir();
-
-
 private:
     Dugum* tepe;
 };

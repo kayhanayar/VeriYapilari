@@ -3,7 +3,6 @@
 #include<exception>
 #include "Dugum.hpp"
 template<typename Tur>
-
 class BagliListe
 {
 public:
@@ -44,129 +43,98 @@ public:
     }
     void ekle(int sira,const Tur& veri)
     {
-        //sira 0 ise ve ilk düğüm yoksa
-        if(sira==0&&ilk==0)
-        {
-            ilk = new Dugum<Tur>(veri);
-            ilk->sonraki =ilk;
-            ilk->onceki = ilk;
-        }
-        else
-        {
-            Dugum<Tur>* aktifDugum = dugumGetir(sira);
-
-            if(aktifDugum==0) return;
-
-            Dugum<Tur>* yeni = new Dugum<Tur>(veri);
-
-            Dugum<Tur>* onceki = aktifDugum->onceki;
-            
-            aktifDugum->onceki = yeni;
-            yeni->sonraki = aktifDugum;
-            yeni->onceki = onceki;
-            
-            if(onceki)
-                onceki->sonraki = yeni;
-            else
-            {
-                ilk = yeni;
-                ilk->onceki=yeni;
-                ilk->sonraki=yeni;
-            }
-                
-        }
-
-        dugumSayisi++;
+		Dugum<Tur>* gec = dugumGetir(sira);
+		if (gec)
+		{
+			Dugum<Tur>* yeniDugum = new Dugum<Tur>(veri);
+			Dugum<Tur>* oncekiDugum = gec->onceki;
+			if (gec == ilk)
+				ilk = yeniDugum;
+			oncekiDugum->sonraki = yeniDugum;
+			yeniDugum->onceki = oncekiDugum;
+			yeniDugum->sonraki = gec;
+			gec->onceki = yeniDugum;
+			dugumSayisi++;
+		}
     }
     void ekle(const  Tur& veri)
     {
        
-        Dugum<Tur>* yeni = new Dugum<Tur>(veri);
+		Dugum<Tur>* yeni = new Dugum<Tur>(veri);
 
-        if(ilk==0)
-        {
-            ilk = yeni;
-            ilk->sonraki = yeni;
-        }
-        else
-        {
-            Dugum<Tur>* gec = ilk;
-            
-            while(gec->sonraki!=ilk)
-                gec=gec->sonraki;
-            
-            gec->sonraki=yeni;
-            yeni->onceki=gec;
-            yeni->sonraki = ilk;
-            ilk->onceki=yeni;
-        }
-        dugumSayisi++;
+		if (ilk == 0)
+		{
+			ilk = yeni;
+			ilk->onceki = ilk;
+			ilk->sonraki = ilk;
+		}
+		else
+		{
+			Dugum<Tur>* gec = dugumGetir(dugumSayisi - 1);
+			gec->sonraki = yeni;
+			yeni->onceki = gec;
+			yeni->sonraki = ilk;
+			ilk->onceki = yeni;
+		}
+		dugumSayisi++;
     }
 
     friend ostream& operator<<(ostream& os,const BagliListe& liste)
     {
         using namespace std;
-        Dugum<Tur>* gecici = liste.ilk;
-        cout<<"-------------------------------"<<endl; 
-        cout<<setw(10)<<"Adres:"<<setw(10)<<"Veri:"<<setw(15)<<"onceki:"<<setw(15)<<"Sonraki:"<<endl; 
-        cout<<"-------------------------------"<<endl;  
-        for(int i=0;i<liste.dugumSayisiGetir();i++)
-        {
-            cout<<setw(10)<<gecici<<setw(10)<<gecici->veri<<setw(15)<<gecici->onceki<<setw(15)<<gecici->sonraki<<endl;
-            cout<<"-------------------------------"<<endl;
-            gecici= gecici->sonraki;  
-        }
-        return os;
+		Dugum<Tur>* gec = liste.ilk;
+		os << setw(15) << "adres" << setw(15) << "veri" << setw(15) << "onceki" << setw(15) << "sonraki" << endl;
+
+		for (int i = 0; i < liste.dugumSayisi; i++)
+		{
+			os << setw(15) << gec << setw(15) << gec->veri << setw(15) << gec->onceki << setw(15) << gec->sonraki << endl;
+			gec = gec->sonraki;
+		}
+		os << "----------------------" << endl;
+		return os;
     }
     void cikar()
     {
-        if(ilk==0)  return;
+		if (ilk == 0)return;
+		if (ilk->sonraki == ilk)
+		{
+			delete ilk;
+			ilk = 0;
+		}
+		else
+		{
+			Dugum<Tur>* gec = dugumGetir(dugumSayisi - 2);
 
-        if(ilk->sonraki==ilk)
-        {
-            delete ilk;
-            ilk=0;
-        }
-        else
-        {
-            Dugum<Tur>* gecici = sondanBirOncekiGetir();
-            delete gecici->sonraki;
-            gecici->sonraki = ilk;
-            ilk->onceki = gecici;
-        }
-        dugumSayisi--;
+
+			delete gec->sonraki;
+
+			gec->sonraki = ilk;
+			ilk->onceki = gec;
+		}
+		dugumSayisi--;
     }
     void cikar(int sira)
     {
 
 
-        Dugum<Tur>* silinecek = dugumGetir(sira);
-        
-        if(silinecek==0) return;
+        Dugum<Tur>* gec = dugumGetir(sira);
 
-        //sirayı daha önce kontrol ettiğimiz için
-        //fonksiyonun var olan bir düğümü getirdiğinden eminiz
+		if (gec)
+		{
+			 Dugum<Tur>* oncekiDugum = gec->onceki;
+			 Dugum<Tur>* sonrakiDugum = gec->sonraki;
 
-        Dugum<Tur>* onceki = silinecek->onceki;
-        Dugum<Tur>* sonraki = silinecek->sonraki;
+			oncekiDugum->sonraki = sonrakiDugum;
+			sonrakiDugum->onceki = oncekiDugum;
+			if (ilk->onceki == ilk)
+				ilk = 0;
+			if (gec == ilk)
+				ilk = sonrakiDugum;
+	
+			delete gec;
 
-        if(sonraki!=ilk)
-            sonraki->onceki = onceki;
-        else
-            ilk->onceki= onceki;
-
-        if(onceki)
-            onceki->sonraki = sonraki;
-        else
-        {
-            Dugum<Tur>* son = dugumGetir(dugumSayisi-1);
-            son->sonraki = ilk->sonraki;
-            ilk = sonraki;  
-            ilk->onceki = son;          
-        }
-            
-        delete silinecek;
-        dugumSayisi--;
+			dugumSayisi--;
+		}
     }
     //nesnenin const referans olarak verildiği fonksiyonlarda
     //sadece const olarak tanımlanmış fonksiyonlar çağrılabilir
@@ -177,33 +145,17 @@ public:
         return dugumSayisi;
     }
 private:
-    Dugum<Tur>* sondanBirOncekiGetir()
-    {
-        if(ilk==0)
-            return 0;
-        if(ilk->sonraki==0)
-            return ilk;
-        
-        Dugum<Tur>* gec= ilk;
-        while(gec->sonraki->sonraki!=ilk)
-            gec=gec->sonraki;
+	Dugum<Tur>* dugumGetir(int sira)
+	{
+		if (sira < 0 || sira >= dugumSayisi)
+			return 0;
+		Dugum<Tur>* gec = ilk;
+		for (int i = 0; i < sira; i++)
+			gec = gec->sonraki;
 
-        return gec;
-    }
-    Dugum<Tur>* dugumGetir(int sira)
-    {
-        if(sira<0||sira>=dugumSayisi)
-            return 0;
-        
-        Dugum<Tur>* gec= ilk;
-        
-        for(int i=0;i<sira;i++)
-        {
-            gec=gec->sonraki;
-        }
-        return gec;
-    }
+		return gec;
 
+	}
 
     Dugum<Tur>* ilk;
     int dugumSayisi;
