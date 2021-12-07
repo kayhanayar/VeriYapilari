@@ -114,10 +114,12 @@ public:
     friend ostream& operator<<(ostream& os,Kuyruk& kuyruk)
 	{
 		
+		Tur enbuyuk = -1;
 		if(kuyruk.ilk==0)
 			os<<"----KUYRUK BOS----"<<endl;
 		else
 		{
+			enbuyuk = kuyruk.enBuyukGetir();
 			if(kuyruk.ilk==kuyruk.son)
 				os<<setw(5)<<"ilk-son->";
 			else
@@ -126,7 +128,11 @@ public:
 		Dugum<Tur>*gec= kuyruk.ilk;
 		while(gec!=0)
 		{
-			os<<setw(2)<<gec->veri<<" : "<<gec->sonraki<<endl;
+			
+			if(enbuyuk==gec->veri)
+				os<<setw(2)<<gec->veri<<"*:*"<<gec->sonraki<<endl;
+			else
+			 	os<<setw(2)<<gec->veri<<" : "<<gec->sonraki<<endl;
 			if(gec->sonraki==kuyruk.son)
 				os<<"son ---->";
 			else
