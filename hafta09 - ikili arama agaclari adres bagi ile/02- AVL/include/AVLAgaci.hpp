@@ -16,22 +16,24 @@ public:
 	void sil(int veri);
     friend ostream& operator<<(ostream& os,AVLAgaci& kuyruk);
 	int yukseklik();
+	
 	void preOrder();
 	void postOrder();
 	void inOrder();
-	
+	void boslukBirak(int adet);
 private:
+	int dengesizlikYonu(Dugum* aktif);
 	Dugum* solaDondur(Dugum* dugum);
 	Dugum* sagaDondur(Dugum* dugum);
-
-	void levelOrder(Dugum* aktif,int level);
+	int minDeger(Dugum* aktif);	
+	void levelOrder();
 	void preOrder(Dugum* aktif);
 	void postOrder(Dugum* index);
 	void inOrder(Dugum* index);
 	int yukseklik(Dugum* aktifDugum);
 	Dugum* ekle(int veri,Dugum* aktifDugum);
 	bool varmi(int aranan,Dugum* aktif);
-
+	Dugum* sil(int veri,Dugum* aktif);
 	int maxDeger(Dugum* aktif);
 	Dugum* kok;
 };

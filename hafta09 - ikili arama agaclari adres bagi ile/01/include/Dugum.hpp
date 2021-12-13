@@ -8,6 +8,7 @@ public:
     int veri;
     Dugum* sol;
     Dugum* sag;
+    int yukseklik;
 };
 
 #endif

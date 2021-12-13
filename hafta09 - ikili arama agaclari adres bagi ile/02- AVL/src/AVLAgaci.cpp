@@ -1,6 +1,8 @@
 #include "AVLAgaci.hpp"
+#include <cmath>
 #include <iomanip>
 #include<iostream>
+#include<queue>
 using namespace std;
 AVLAgaci::AVLAgaci()
 {
@@ -20,7 +22,7 @@ void AVLAgaci::ekle(int eklenecek)
 }
 void AVLAgaci::sil(int veri) 
 {
-	
+	kok = sil(veri,kok);
 }
 int AVLAgaci::yukseklik() 
 {
@@ -37,30 +39,52 @@ void AVLAgaci::inOrder() {
     inOrder(0);
 }
 
-void AVLAgaci::levelOrder(Dugum* aktif,int level) 
-{
-	if(aktif)
+void AVLAgaci::levelOrder()
+ {
+    if(kok==0)
+    return;
+	queue<Dugum*> kuyruk;
+
+    kuyruk.push(kok);
+
+    int seviye=0;
+    int yuksek = yukseklik();
+    int kat=0;
+    cout<<endl;
+    while(!kuyruk.empty()&&seviye<=yuksek)
     {
-        if(level==0)
+       
+        auto siradaki = kuyruk.front();
+        kuyruk.pop();
+      
+        if(kat==0)
+            boslukBirak(yuksek-seviye);
+        if(siradaki)
+            cout<<setw(2)<<siradaki->veri;
+        else
+            cout<<setw(2)<<"--";
+        boslukBirak(yuksek-seviye+1);
+        
+        if(siradaki)
         {
-            cout<<setw(5)<<aktif->veri;
-        }
+            kuyruk.push(siradaki->sol);
+            kuyruk.push(siradaki->sag);
+        } 
         else
         {
-
-            if(aktif->sol)
-                levelOrder(aktif->sol,level-1);
-            else
-                cout<<setw(5)<<"bos";
-         
-
-            if(aktif->sag)
-                levelOrder(aktif->sag,level-1);
-            else
-                cout<<setw(5)<<"bos";
-            
-         
+            kuyruk.push(0);
+            kuyruk.push(0);         
         }
+        kat++;
+        if(pow(2,seviye)==kat)
+        {
+            cout<<endl;    
+            seviye++;
+            kat=0;
+             
+        }
+
+           
     }
 }
 void AVLAgaci::preOrder(Dugum* aktif) 
@@ -181,15 +205,101 @@ bool AVLAgaci::varmi(int aranan,Dugum* aktif)
         return aktif;
     }
 }
+Dugum* AVLAgaci::sil(int veri,Dugum* aktif) 
+{
+	if(aktif==0)
+        return 0;
+    
+    if(veri<aktif->veri)
+    {
+        aktif->sol = sil(veri,aktif->sol);
+    }
+    else if(veri>aktif->veri)
+    {
+        aktif->sag = sil(veri,aktif->sag);
+    }
+    else//aradığımız düğümü bulduk
+    {
+        if(aktif->sol==0&&aktif->sag==0)
+        {
+            delete aktif;
+            aktif= 0;
+        }
+        else if(aktif->sol==0)
+        {
+            Dugum* sil = aktif->sag;
+            *aktif = *aktif->sag;
+            delete sil;
+        }
+        else if(aktif->sag==0)
+        {
+            Dugum* sil  = aktif->sol;
+            *aktif=*aktif->sol;
+            delete sil;
+        }
+        else 
+        {
+            aktif->veri = minDeger(aktif->sag);
+            sil(aktif->veri,aktif->sag);
+        }
 
+        
+    }
+    
+    
+    int denge = dengesizlikYonu(aktif);
+
+    if(denge>1) //sol tarafta dengesizlik
+    {
+        //sol sol dengesizliği
+        if(dengesizlikYonu(aktif->sol)>=0)
+        {
+            return sagaDondur(aktif);
+        }
+        //sol sag durumu
+        if(dengesizlikYonu(aktif->sol)<0)
+        {
+            aktif->sol=solaDondur(aktif->sol);
+            return sagaDondur(aktif);
+        }
+    }
+    else if(denge<-1)//sag tarafta dengesizlik
+    {
+        //sağ sağ durumu
+        if(dengesizlikYonu(aktif->sag)<=0)
+        {
+            return solaDondur(aktif);
+        }
+        //sağ sol durumu
+        if(dengesizlikYonu(aktif->sag)>0)
+        {
+            aktif->sag = sagaDondur(aktif->sag);
+            return solaDondur(aktif);
+        }
+    }    
+    return aktif;
+}
+int AVLAgaci::minDeger(Dugum* aktif) 
+{
+    if(aktif->sol)
+        return maxDeger(aktif->sol);
+    
+    return aktif->veri;
+}
+void AVLAgaci::boslukBirak(int adet) {
+     int baslangicBosluk = pow(2,adet)-1;
+     for(int i=0;i<baslangicBosluk;i++)
+	    cout<<"  ";
+}
+int AVLAgaci::dengesizlikYonu(Dugum* aktif) 
+{
+    if(aktif==0)
+        return 0;
+    return yukseklik(aktif->sol)- yukseklik(aktif->sag);
+}
  ostream& operator<<(ostream& os,AVLAgaci& agac)
 {
-    int yukseklik = agac.yukseklik();
-    for(int i=0;i<=yukseklik;i++)
-    {
-        agac.levelOrder(agac.kok,i);
-        os<<endl;
-    }
+  agac.levelOrder();  
         
 
     return os;  

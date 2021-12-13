@@ -8,8 +8,11 @@ using namespace std;
 int main()
 {
   IkiliAramaAgaci agac;
+  int sayilar[]= {50,30,70,20,10,5,18,90,100,80,88,75,60,68,40,25,22,28};
+  int sira=0;
   while(true)
   {
+
     cout<<agac;
     cout<<"1.ekle"<<endl;
     cout<<"2.sil"<<endl;
@@ -22,9 +25,13 @@ int main()
     {
       if(secim==1)
       {
-        int eklenen = rand()%100;
-        cout<<"eklenen:"<<eklenen<<endl;
-        agac.ekle(eklenen);
+        if(sira<18)
+        {
+          int eklenen = sayilar[sira++];
+          cout<<"eklenen:"<<eklenen<<endl;
+          agac.ekle(eklenen);
+        }
+        
       }
       else if(secim==2)
       {

@@ -12,12 +12,14 @@ int main()
 
     try
     {
-      agac.ekle(1);
-      agac.ekle(3);
-      agac.ekle(4);
+      agac.ekle(20);
+      agac.ekle(10);
       agac.ekle(5);
-      agac.ekle(6);
+      agac.ekle(15);
+      agac.ekle(30);
       cout<<agac;
+      agac.sil(30);
+      cout<<agac;           
     }
     catch(const std::exception& e)
     {

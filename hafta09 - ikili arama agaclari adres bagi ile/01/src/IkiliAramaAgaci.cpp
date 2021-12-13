@@ -1,7 +1,10 @@
 #include "IkiliAramaAgaci.hpp"
 #include <iomanip>
 #include<iostream>
+#include<cmath>
+#include<queue>
 using namespace std;
+
 IkiliAramaAgaci::IkiliAramaAgaci()
 {
     kok= 0;
@@ -45,6 +48,7 @@ void IkiliAramaAgaci::levelOrder(Dugum* aktif,int level)
     {
         if(level==0)
         {
+            boslukBirak(aktif->yukseklik);
             cout<<setw(5)<<aktif->veri;
         }
         else
@@ -53,16 +57,71 @@ void IkiliAramaAgaci::levelOrder(Dugum* aktif,int level)
             if(aktif->sol)
                 levelOrder(aktif->sol,level-1);
             else
-                cout<<setw(5)<<"bos";
+            {
+                 boslukBirak(aktif->yukseklik);
+                 cout<<setw(5)<<"bos";
+            }
+                
          
 
             if(aktif->sag)
                 levelOrder(aktif->sag,level-1);
             else
-                cout<<setw(5)<<"bos";
+            {
+                 boslukBirak(aktif->yukseklik);
+                 cout<<setw(5)<<"bos";
+            }
             
          
         }
+    }
+}
+void IkiliAramaAgaci::levelOrder()
+ {
+        if(kok==0)
+    return;
+	queue<Dugum*> kuyruk;
+
+    kuyruk.push(kok);
+
+    int seviye=0;
+    int yuksek = yukseklik();
+    int kat=0;
+    cout<<endl;
+    while(!kuyruk.empty()&&seviye<=yuksek)
+    {
+       
+        auto siradaki = kuyruk.front();
+        kuyruk.pop();
+      
+        if(kat==0)
+            boslukBirak(yuksek-seviye);
+        if(siradaki)
+            cout<<setw(2)<<siradaki->veri;
+        else
+            cout<<setw(2)<<"--";
+        boslukBirak(yuksek-seviye+1);
+        
+        if(siradaki)
+        {
+            kuyruk.push(siradaki->sol);
+            kuyruk.push(siradaki->sag);
+        } 
+        else
+        {
+            kuyruk.push(0);
+            kuyruk.push(0);         
+        }
+        kat++;
+        if(pow(2,seviye)==kat)
+        {
+            cout<<endl;    
+            seviye++;
+            kat=0;
+             
+        }
+
+           
     }
 }
 void IkiliAramaAgaci::preOrder(Dugum* aktif) 
@@ -99,8 +158,9 @@ int IkiliAramaAgaci::yukseklik(Dugum* aktifDugum)
 {
 	if(aktifDugum)
     {
-        return 1+max(   yukseklik(aktifDugum->sol),
+        aktifDugum->yukseklik= 1+max(   yukseklik(aktifDugum->sol),
                         yukseklik(aktifDugum->sag));
+        return aktifDugum->yukseklik;
     }
     return -1;
 }
@@ -201,6 +261,11 @@ int IkiliAramaAgaci::maxDeger(Dugum* aktif)
     
     return aktif->veri;
 }
+void IkiliAramaAgaci::boslukBirak(int adet) {
+     int baslangicBosluk = pow(2,adet)-1;
+     for(int i=0;i<baslangicBosluk;i++)
+	    cout<<"  ";
+}
 bool IkiliAramaAgaci::varmi(int aranan,Dugum* aktif)
 {
     if(aktif->veri<aranan)
@@ -224,13 +289,16 @@ bool IkiliAramaAgaci::varmi(int aranan,Dugum* aktif)
 
  ostream& operator<<(ostream& os,IkiliAramaAgaci& agac)
 {
+    /*
     int yukseklik = agac.yukseklik();
     for(int i=0;i<=yukseklik;i++)
     {
+        agac.boslukBirak(yukseklik-i);
         agac.levelOrder(agac.kok,i);
         os<<endl;
     }
-        
+      */
+     agac.levelOrder();  
 
     return os;  
 }

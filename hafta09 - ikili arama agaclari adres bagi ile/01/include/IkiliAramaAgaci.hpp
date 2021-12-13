@@ -22,6 +22,7 @@ public:
 	
 private:
 	void levelOrder(Dugum* aktif,int level);
+	void levelOrder();
 	void preOrder(Dugum* aktif);
 	void postOrder(Dugum* index);
 	void inOrder(Dugum* index);
@@ -31,6 +32,8 @@ private:
 	void silDonguile(Dugum* aktif,Dugum* Ebeveyn);
 	void sil(int aranan,Dugum* &aktif);
 	int maxDeger(Dugum* aktif);
+	int agacYukseklik;
+	void boslukBirak(int adet);
 	Dugum* kok;
 };
 //diger fonksiyonlar eklenecek
